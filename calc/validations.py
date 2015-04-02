@@ -38,7 +38,7 @@ def is_valid(transition_mat):
     check_probs_valid(transition_mat)
     check_normalized_probs(transition_mat)
 
-
+# TODO: consider renaming
 def check_probs_valid(transition_mat):
     check_valid_probs(*transition_mat.values())
 

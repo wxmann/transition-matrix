@@ -32,10 +32,11 @@ class ProbabilityVectorTest(unittest.TestCase):
 
 class TransitionMatrixGroupTest(unittest.TestCase):
     def setUp(self):
-        self.sample_trans_mat = TransitionMatrix('A', 'AA')
+        self.sample_trans_mat1 = TransitionMatrix('A', 'AA')
+        self.sample_trans_mat2 = TransitionMatrix('A', 'AAA')
         self.trans_mat_group = TransitionMatrixGroup()
-        self.trans_mat_group.add_matrix(1, self.sample_trans_mat)
-        self.trans_mat_group.add_matrix(3, self.sample_trans_mat)
+        self.trans_mat_group.add_matrix(1, self.sample_trans_mat1)
+        self.trans_mat_group.add_matrix(3, self.sample_trans_mat2)
 
     def test_should_have_matrix(self):
         self.assertTrue(self.trans_mat_group.has_matrix(1))
@@ -43,18 +44,26 @@ class TransitionMatrixGroupTest(unittest.TestCase):
         self.assertFalse(self.trans_mat_group.has_matrix(2))
 
     def test_should_get_matrix(self):
+        # TODO: equality for transition matrix
         self.assertIsNotNone(self.trans_mat_group.get_matrix(1))
         self.assertIsNone(self.trans_mat_group.get_matrix(2))
         self.assertIsNotNone(self.trans_mat_group.get_matrix(3))
 
     def test_should_return_periods(self):
-        self.assertCountEqual(self.trans_mat_group.periods(), [1, 3])
+        # has to be ordered
+        self.assertEqual(self.trans_mat_group.periods(), [1, 3])
 
-    def test_should_return_first_period(self):
-        self.assertEqual(self.trans_mat_group.firstperiod(), 1)
+    def test_iterate(self):
+        # TODO: implement equality in transition matrix, add assertions.
+        p1 = self.trans_mat_group.next()
+        p2 = self.trans_mat_group.next()
+        # shouldthrow = self.trans_mat_group.next()
 
-    def test_should_return_last_period(self):
-        self.assertEqual(self.trans_mat_group.lastperiod(), 3)
+    # def test_should_return_first_period(self):
+    #     self.assertEqual(self.trans_mat_group.firstperiod(), 1)
+    #
+    # def test_should_return_last_period(self):
+    #     self.assertEqual(self.trans_mat_group.lastperiod(), 3)
 
 
 class TransitionMatrixTest(unittest.TestCase):

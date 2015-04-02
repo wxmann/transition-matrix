@@ -1,6 +1,6 @@
 from calc.exceptions import InvalidTransitionStateError
 from calc.validations import check_state_valid
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 
 __author__ = 'tangz'
 
@@ -21,10 +21,28 @@ class ProbabilityVector:
             raise InvalidTransitionStateError('Invalid state: ' + state)
         return self.vectordict[state]
 
-# TODO: make iterable (generator?)
+# TODO: unit test iterator
 class TransitionMatrixGroup:
     def __init__(self):
         self.group = {}
+        self.pmarker = -1
+
+    def __iter__(self):
+        return self
+
+    def _pmarker_incrementer(self):
+        if not self.group:
+            self.pmarker = -1
+        self.pmarker += 1
+
+    # not optimized, but we do not expect more ~10 transition matrices in group.
+    def next(self):
+        self._pmarker_incrementer()
+        periods = self.periods()
+        if not self.pmarker in range(len(periods)):
+            raise StopIteration()
+        else:
+            return self.get_matrix(periods[self.pmarker])
 
     def add_matrix(self, period, transition_mat):
         self.group[period] = transition_mat
@@ -36,20 +54,20 @@ class TransitionMatrixGroup:
         return self.group.get(period)
 
     def periods(self):
-        return self.group.keys()
+        return sorted(self.group.keys())
 
-    def firstperiod(self):
-        sortedperiods = sorted(self.periods())
-        if not sortedperiods:
-            return None
-        return sortedperiods[0]
-
-    def lastperiod(self):
-        reversesortedperiods = sorted(self.periods(), reverse=True)
-        if not reversesortedperiods:
-            return None
-        return reversesortedperiods[0]
-
+    # def firstperiod(self):
+    #     sortedperiods = sorted(self.periods())
+    #     if not sortedperiods:
+    #         return None
+    #     return sortedperiods[0]
+    #
+    # def lastperiod(self):
+    #     reversesortedperiods = sorted(self.periods(), reverse=True)
+    #     if not reversesortedperiods:
+    #         return None
+    #     return reversesortedperiods[0]
+    #
     # def __bool__(self):
     #     return not self.group
 
