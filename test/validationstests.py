@@ -13,13 +13,13 @@ class ValidationsTest(unittest.TestCase):
         self.invalid_mat = testdata.inc_invalid_trans_mat()
 
     def test_should_take_valid_probs(self):
-        validations.check_probs_valid(self.valid_trans_mat)
+        validations.check_matrix_probs(self.valid_trans_mat)
 
     def test_should_take_normalized_probs(self):
         validations.check_normalized_probs(self.valid_trans_mat)
 
     def test_should_catch_invalid_probs(self):
-        self.assertRaises(exceptions.InvalidProbabilityError, validations.check_probs_valid, self.invalid_mat)
+        self.assertRaises(exceptions.InvalidProbabilityError, validations.check_matrix_probs, self.invalid_mat)
 
     def test_should_catch_nonnormal_probs(self):
         self.assertRaises(exceptions.UnnormalizedProbabilitiesError, validations.check_normalized_probs, self.invalid_mat)

@@ -25,24 +25,19 @@ class ProbabilityVector:
 class TransitionMatrixGroup:
     def __init__(self):
         self.group = {}
-        self.pmarker = -1
+        self.pmarker = 0
 
     def __iter__(self):
         return self
 
     def _pmarker_incrementer(self):
         if not self.group:
-            self.pmarker = -1
+            self.reset_period_marker()
         self.pmarker += 1
 
-    # not optimized, but we do not expect more ~10 transition matrices in group.
-    def next(self):
+    def __next__(self):
         self._pmarker_incrementer()
-        periods = self.periods()
-        if not self.pmarker in range(len(periods)):
-            raise StopIteration()
-        else:
-            return self.get_matrix(periods[self.pmarker])
+        return self.PeriodMatrixAssociation(self.pmarker, self.get_matrix(self.pmarker))
 
     def add_matrix(self, period, transition_mat):
         self.group[period] = transition_mat
@@ -54,28 +49,35 @@ class TransitionMatrixGroup:
         return self.group.get(period)
 
     def periods(self):
-        return sorted(self.group.keys())
+        return list(sorted(self.group.keys()))
 
-    # def firstperiod(self):
-    #     sortedperiods = sorted(self.periods())
-    #     if not sortedperiods:
-    #         return None
-    #     return sortedperiods[0]
-    #
-    # def lastperiod(self):
-    #     reversesortedperiods = sorted(self.periods(), reverse=True)
-    #     if not reversesortedperiods:
-    #         return None
-    #     return reversesortedperiods[0]
+    def firstperiod(self):
+        return self.periods()[0]
+
+    def lastperiod(self):
+        return self.periods()[-1]
+
+    def reset_period_marker(self):
+        self.set_period_marker(0)
+
+    def set_period_marker(self, period):
+        self.pmarker = period
     #
     # def __bool__(self):
     #     return not self.group
 
+    class PeriodMatrixAssociation:
+        def __init__(self, period, matrix):
+            self.period = period
+            self.matrix = matrix
 
+# TODO: eq, str
 class TransitionMatrix:
     def __init__(self, *states):
         self.data = defaultdict(dict)
         self.reset_states(states)
+
+    #def __
 
     def reset_states(self, states):
         self.states = states

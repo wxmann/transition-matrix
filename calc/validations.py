@@ -23,23 +23,23 @@ def check_consistent_states(transition_mat_group):
 def check_valid_probs(*probs):
     if any(prob > 1.0 or prob < 0.0 for prob in probs):
         raise InvalidProbabilityError(
-            'Invalid probability found (> 1 or < 0)! Check the probabilities again: {}'.format(probs))
+            'Invalid probability found (> 1 or < 0)! Check the probabilities again: {0}'.format(probs))
 
 
 def check_probs_sum_to_one(*probs):
     if not eq(sum(probs), 1.0):
         raise UnnormalizedProbabilitiesError(
-            "Sum of probabilities: {} is not equal to 1.0 where it is expected to.".format(probs))
+            "Sum of probabilities: {0} is not equal to 1.0 where it is expected to.".format(probs))
 
 
 ### Methods specific to transition matrix ###
 
 def is_valid(transition_mat):
-    check_probs_valid(transition_mat)
+    check_matrix_probs(transition_mat)
     check_normalized_probs(transition_mat)
 
-# TODO: consider renaming
-def check_probs_valid(transition_mat):
+
+def check_matrix_probs(transition_mat):
     check_valid_probs(*transition_mat.values())
 
 

@@ -55,15 +55,15 @@ class TransitionMatrixGroupTest(unittest.TestCase):
 
     def test_iterate(self):
         # TODO: implement equality in transition matrix, add assertions.
-        p1 = self.trans_mat_group.next()
-        p2 = self.trans_mat_group.next()
+        p1 = next(self.trans_mat_group)
+        p2 = next(self.trans_mat_group)
         # shouldthrow = self.trans_mat_group.next()
 
-    # def test_should_return_first_period(self):
-    #     self.assertEqual(self.trans_mat_group.firstperiod(), 1)
-    #
-    # def test_should_return_last_period(self):
-    #     self.assertEqual(self.trans_mat_group.lastperiod(), 3)
+    def test_should_return_first_period(self):
+        self.assertEqual(self.trans_mat_group.firstperiod(), 1)
+
+    def test_should_return_last_period(self):
+        self.assertEqual(self.trans_mat_group.lastperiod(), 3)
 
 
 class TransitionMatrixTest(unittest.TestCase):
@@ -116,7 +116,6 @@ class TransitionMatrixTest(unittest.TestCase):
     def test_values(self):
         self.matrix = testdata.inc_invalid_trans_mat()
         self.assertCountEqual(self.matrix.values(), range(1, 10))
-
 
     def test_get_all_future_invalid_state(self):
         self.assertRaises(exceptions.InvalidTransitionStateError, self.matrix.probabilities_from, 'AAAAAA')
