@@ -23,15 +23,16 @@ def calculator(transmatgroup, prob_vec_init, first_period=None, last_period=None
         last_period = transmatgroup.lastperiod()
     if first_period > last_period:
         raise AssertionError('First period: {0} is > last period: {1}'.format(first_period, last_period))
-    transmatgroup.set_period_marker(first_period-1)
+    # TODO: think about this.
+    transmatgroup.set_period_marker(first_period)
+    period = first_period
     while True:
+        yield CalculationResult(period, probvec)
         periodmatassoc_next = next(transmatgroup)
         period, transmat_next = periodmatassoc_next.period, periodmatassoc_next.matrix
-        newprobvec = probvec if transmat_next is None else multiply(transmat_next, probvec)
-        yield newprobvec
         if period > last_period:
             break
-        probvec = newprobvec
+        probvec = probvec if transmat_next is None else multiply(transmat_next, probvec)
 
 
 class CalculationResult:
@@ -39,4 +40,5 @@ class CalculationResult:
         self.period = period
         self.probabilities = probvector
 
-    #TODO: implement a __str__
+    def __str__(self):
+        return 'period: {0} | probabilities: {1}'.format(self.period, self.probabilities)

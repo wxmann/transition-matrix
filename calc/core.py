@@ -21,11 +21,14 @@ class ProbabilityVector:
             raise InvalidTransitionStateError('Invalid state: ' + state)
         return self.vectordict[state]
 
+    def __str__(self):
+        return str(self.vectordict)
+
 # TODO: unit test iterator
 class TransitionMatrixGroup:
     def __init__(self):
         self.group = {}
-        self.pmarker = 0
+        self.pmarker = 1
 
     def __iter__(self):
         return self
@@ -36,8 +39,9 @@ class TransitionMatrixGroup:
         self.pmarker += 1
 
     def __next__(self):
+        nextval = self.PeriodMatrixAssociation(self.pmarker, self.get_matrix(self.pmarker))
         self._pmarker_incrementer()
-        return self.PeriodMatrixAssociation(self.pmarker, self.get_matrix(self.pmarker))
+        return nextval
 
     def add_matrix(self, period, transition_mat):
         self.group[period] = transition_mat
@@ -58,9 +62,11 @@ class TransitionMatrixGroup:
         return self.periods()[-1]
 
     def reset_period_marker(self):
-        self.set_period_marker(0)
+        self.set_period_marker(1)
 
     def set_period_marker(self, period):
+        if period <= 0:
+            raise AssertionError('Period must be a positive integer!')
         self.pmarker = period
     #
     # def __bool__(self):
