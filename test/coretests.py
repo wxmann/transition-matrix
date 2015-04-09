@@ -38,26 +38,46 @@ class TransitionMatrixGroupTest(unittest.TestCase):
         self.trans_mat_group.add_matrix(1, self.sample_trans_mat1)
         self.trans_mat_group.add_matrix(3, self.sample_trans_mat2)
 
+    def tearDown(self):
+        self.trans_mat_group.reset_period_marker()
+
     def test_should_have_matrix(self):
         self.assertTrue(self.trans_mat_group.has_matrix(1))
         self.assertTrue(self.trans_mat_group.has_matrix(3))
         self.assertFalse(self.trans_mat_group.has_matrix(2))
 
     def test_should_get_matrix(self):
-        # TODO: equality for transition matrix
-        self.assertIsNotNone(self.trans_mat_group.get_matrix(1))
-        self.assertIsNone(self.trans_mat_group.get_matrix(2))
-        self.assertIsNotNone(self.trans_mat_group.get_matrix(3))
+        matrixp1 = self.trans_mat_group.get_matrix(1)
+        matrixp2 = self.trans_mat_group.get_matrix(2)
+        matrixp3 = self.trans_mat_group.get_matrix(3)
+        self.assertIsNotNone(matrixp1)
+        self.assertIsNone(matrixp2)
+        self.assertIsNotNone(matrixp3)
+        self.assertEqual(self.sample_trans_mat1, matrixp1)
+        self.assertEqual(self.sample_trans_mat2, matrixp3)
 
     def test_should_return_periods(self):
         # has to be ordered
         self.assertEqual(self.trans_mat_group.periods(), [1, 3])
 
-    def test_iterate(self):
-        # TODO: implement equality in transition matrix, add assertions.
+    def test_should_iterate(self):
         p1 = next(self.trans_mat_group)
         p2 = next(self.trans_mat_group)
-        # shouldthrow = self.trans_mat_group.next()
+        p3 = next(self.trans_mat_group)
+        p4 = next(self.trans_mat_group)
+        expectedp1mat = self.sample_trans_mat1
+        expectedp2mat = None
+        expectedp3mat = self.sample_trans_mat2
+        expectedp4mat = None
+
+        self.assertEqual(p1.period, 1)
+        self.assertEqual(p1.matrix, expectedp1mat)
+        self.assertEqual(p2.period, 2)
+        self.assertEqual(p2.matrix, expectedp2mat)
+        self.assertEqual(p3.period, 3)
+        self.assertEqual(p3.matrix, expectedp3mat)
+        self.assertEqual(p4.period, 4)
+        self.assertEqual(p4.matrix, expectedp4mat)
 
     def test_should_return_first_period(self):
         self.assertEqual(self.trans_mat_group.firstperiod(), 1)
@@ -122,6 +142,26 @@ class TransitionMatrixTest(unittest.TestCase):
 
     def test_get_all_current_invalid_state(self):
         self.assertRaises(exceptions.InvalidTransitionStateError, self.matrix.probabilities_to, 'AAAAAA')
+
+    def test_eq_same_probs(self):
+        matrix1 = testdata.inc_invalid_trans_mat()
+        matrix2 = testdata.inc_invalid_trans_mat()
+        self.assertEqual(matrix1, matrix2)
+
+    def test_eq_same_matrix(self):
+        matrix1 = testdata.inc_invalid_trans_mat()
+        self.assertEqual(matrix1, matrix1)
+
+    def test_not_eq_not_same_probs(self):
+        matrix1 = testdata.inc_invalid_trans_mat()
+        matrix2 = testdata.valid_transition_mat()
+        self.assertNotEqual(matrix1, matrix2)
+
+    def test_not_eq_not_same_states(self):
+        matrix1 = testdata.inc_invalid_trans_mat()
+        matrix2 = TransitionMatrix('Q', 'R')
+        self.assertNotEqual(matrix1, matrix2)
+
 
 
 

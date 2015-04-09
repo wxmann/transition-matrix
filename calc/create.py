@@ -5,15 +5,14 @@ from util import logutil
 
 __author__ = 'tangz'
 
-# TODO: unit test
 def random_group(states, periods):
     group = TransitionMatrixGroup()
     for period in periods:
-        matrix = random(*states)
+        matrix = random_matrix(*states)
         group.add_matrix(period, matrix)
     return group
 
-def random(*states):
+def random_matrix(*states):
     transmat = TransitionMatrix(*states)
     statelist = list(states)
     last_state = statelist[-1]

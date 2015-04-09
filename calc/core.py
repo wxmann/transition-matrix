@@ -1,6 +1,7 @@
 from calc.exceptions import InvalidTransitionStateError
 from calc.validations import check_state_valid
 from collections import defaultdict, OrderedDict
+from util import mathutil
 
 __author__ = 'tangz'
 
@@ -24,11 +25,11 @@ class ProbabilityVector:
     def __str__(self):
         return str(self.vectordict)
 
-# TODO: unit test iterator
+
 class TransitionMatrixGroup:
     def __init__(self):
         self.group = {}
-        self.pmarker = 1
+        self.reset_period_marker()
 
     def __iter__(self):
         return self
@@ -66,9 +67,9 @@ class TransitionMatrixGroup:
 
     def set_period_marker(self, period):
         if period <= 0:
-            raise AssertionError('Period must be a positive integer!')
+            raise ValueError('Period must be a positive integer!')
         self.pmarker = period
-    #
+
     # def __bool__(self):
     #     return not self.group
 
@@ -77,13 +78,34 @@ class TransitionMatrixGroup:
             self.period = period
             self.matrix = matrix
 
-# TODO: eq, str
+# TODO: str
 class TransitionMatrix:
     def __init__(self, *states):
         self.data = defaultdict(dict)
         self.reset_states(states)
 
-    #def __
+    def __eq__(self, other):
+        if not isinstance(other, TransitionMatrix):
+            return False
+        else:
+            return self is other or (self._states_eq(other) and self._probs_eq(other))
+
+    def _states_eq(self, other):
+        return sorted(self.states) == sorted(other.states)
+
+    def _probs_eq(self, other):
+        for current_state in self.states:
+            for future_state in self.states:
+                if not mathutil.eq(self.get_probability(current_state, future_state), other.get_probability(current_state, future_state)):
+                    return False
+        return True
+
+    def __hash__(self):
+        return hash(self.data)
+
+    # def __str__(self):
+    #     firstrow =
+
 
     def reset_states(self, states):
         self.states = states
