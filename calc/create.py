@@ -1,5 +1,5 @@
 from calc import validations
-from calc.core import TransitionMatrix, TransitionMatrixGroup
+from calc.core import TransitionMatrix, TransitionMatrixGroup, ProbabilityVector
 from random import uniform
 from util import logutil
 
@@ -41,4 +41,11 @@ def _prob_helper(transmat, current_state, future_state, last_state):
 
     logutil.info('generated probability for current state: {0}, future state: {1}, is: {2}'.format(current_state, future_state, generated_prob))
     return generated_prob
+
+def probability_exact(exact_state, possible_states):
+    if not exact_state in possible_states:
+        raise ValueError('Exact state provided is not in list of possible states!')
+    mapping = {state: 1.0 if exact_state == state else 0.0 for state in possible_states}
+    return ProbabilityVector(**mapping)
+
 

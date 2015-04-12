@@ -1,5 +1,5 @@
 from calc import validations
-from calc.core import ProbabilityVector
+from calc.core import ProbabilityVector, matrixrange
 
 __author__ = 'tangz'
 
@@ -26,25 +26,20 @@ def calculator(transmatgroup, prob_vec_init, first_period=None, last_period=None
         last_period = transmatgroup.lastperiod()
     if first_period > last_period:
         raise ValueError('First period: {0} is > last period: {1}'.format(first_period, last_period))
-    for matrix_assoc in transmatgroup:
-        if matrix_assoc.period > last_period:
-            break
-        matrix = matrix_assoc.matrix
-        validations.is_valid(matrix)
-        validations.check_consistent_states(matrix, prob_vec_init)
+    # for matrix_assoc in transmatgroup:
+    #     if matrix_assoc.period > last_period:
+    #         break
+    #     matrix = matrix_assoc.matrix
+    #     validations.is_valid(matrix)
+    #     validations.check_consistent_states(matrix, prob_vec_init)
 
     # now we're okay to do calculation
     probvec = prob_vec_init
-    transmatgroup.set_period_marker(first_period)
-    period = first_period
-    while True:
+    for periodmatassoc in matrixrange(transmatgroup, first_period, last_period+1):
+        period = periodmatassoc.period
         yield CalculationResult(period, probvec)
-        if period > last_period:
-            break
-        periodmatassoc_next = next(transmatgroup)
-        period_next, transmat_next = periodmatassoc_next.period + 1, periodmatassoc_next.matrix
-        probvec = probvec if transmat_next is None else multiply(transmat_next, probvec)
-        period = period_next
+        matrix = periodmatassoc.matrix
+        probvec = probvec if matrix is None else multiply(matrix, probvec)
 
 
 class CalculationResult:

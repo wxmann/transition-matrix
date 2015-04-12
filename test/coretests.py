@@ -29,6 +29,14 @@ class ProbabilityVectorTest(unittest.TestCase):
     def test_should_raise_if_get_nonexisting_state(self):
         self.assertRaises(exceptions.InvalidTransitionStateError, self.probvector.get, 'XX')
 
+    def test_should_eq(self):
+        probvector2 = ProbabilityVector(AAA=1, AA=2, A=3)
+        self.assertEqual(self.probvector, probvector2)
+
+    def test_should_not_eq(self):
+        probvector2 = ProbabilityVector(AAA=2, AA=2, A=3)
+        self.assertNotEqual(self.probvector, probvector2)
+
 
 class TransitionMatrixGroupTest(unittest.TestCase):
     def setUp(self):

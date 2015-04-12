@@ -5,6 +5,7 @@ from util import mathutil
 
 __author__ = 'tangz'
 
+
 class ProbabilityVector:
     def __init__(self, **initprobs):
         self.vectordict = {}
@@ -24,6 +25,30 @@ class ProbabilityVector:
 
     def __str__(self):
         return str(self.vectordict)
+
+    def __eq__(self, other):
+        if not isinstance(other, ProbabilityVector):
+            return False
+        return self is other or self.vectordict == other.vectordict
+
+    def __hash__(self):
+        return hash(self.vectordict)
+
+# TODO: Unit test matrixrange
+def matrixrange(matrix_group, period_stop):
+    matrix_group.reset_period_marker()
+    for per_matrix in matrix_group:
+        if per_matrix.period >= period_stop:
+            break
+        yield per_matrix
+
+
+def matrixrange(matrix_group, period_start, period_stop):
+    matrix_group.set_period_marker(period_start)
+    for per_matrix in matrix_group:
+        if per_matrix.period >= period_stop:
+            break
+        yield per_matrix
 
 
 class TransitionMatrixGroup:
@@ -71,12 +96,13 @@ class TransitionMatrixGroup:
         self.pmarker = period
 
     # def __bool__(self):
-    #     return not self.group
+    # return not self.group
 
     class PeriodMatrixAssociation:
         def __init__(self, period, matrix):
             self.period = period
             self.matrix = matrix
+
 
 # TODO: str
 class TransitionMatrix:
@@ -96,7 +122,8 @@ class TransitionMatrix:
     def _probs_eq(self, other):
         for current_state in self.states:
             for future_state in self.states:
-                if not mathutil.eq(self.get_probability(current_state, future_state), other.get_probability(current_state, future_state)):
+                if not mathutil.eq(self.get_probability(current_state, future_state),
+                                   other.get_probability(current_state, future_state)):
                     return False
         return True
 
@@ -104,7 +131,7 @@ class TransitionMatrix:
         return hash(self.data)
 
     # def __str__(self):
-    #     firstrow =
+    # firstrow =
 
 
     def reset_states(self, states):

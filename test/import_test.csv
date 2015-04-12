@@ -1,0 +1,10 @@
+TRANSITION_MATRIX,START_STATE,END_STATE,PROBABILITY_MULTIPLIER
+FirstMatrixOutput,AAA,AAA,0.3
+FirstMatrixOutput,AA,AAA,0.1
+FirstMatrixOutput,A,AAA,0.6
+FirstMatrixOutput,AAA,AA,0.5
+FirstMatrixOutput,AA,AA,0.5
+FirstMatrixOutput,A,AA,0.0
+FirstMatrixOutput,AAA,A,0.2
+FirstMatrixOutput,AA,A,0.4
+FirstMatrixOutput,A,A,0.4

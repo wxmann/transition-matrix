@@ -4,9 +4,7 @@ from util.mathutil import eq
 
 __author__ = 'tangz'
 
-# TODO: check consistent states between probability vector and transition matrix
-
-# TODO: unit test
+# TODO: use better syntax, unit test
 def check_consistent_states(transition_mat_group):
     states = None
     for period in transition_mat_group.periods():
