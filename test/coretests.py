@@ -1,6 +1,6 @@
 import unittest
 
-from calc.core import TransitionMatrix, TransitionMatrixGroup, ProbabilityVector
+from calc.core import *
 from calc import exceptions
 from test import testdata
 
@@ -92,6 +92,30 @@ class TransitionMatrixGroupTest(unittest.TestCase):
 
     def test_should_return_last_period(self):
         self.assertEqual(self.trans_mat_group.lastperiod(), 3)
+
+    def test_matrix_range(self):
+        mrange = matrixrange(self.trans_mat_group, 1, 5)
+        matrixp1 = self.trans_mat_group.get_matrix(1)
+        matrixp2 = self.trans_mat_group.get_matrix(2)
+        matrixp3 = self.trans_mat_group.get_matrix(3)
+        matrixp4 = self.trans_mat_group.get_matrix(4)
+        expected_mats = {1: matrixp1, 2: matrixp2, 3: matrixp3, 4: matrixp4}
+        for per_matrix in mrange:
+            period = per_matrix.period
+            matrix = per_matrix.matrix
+            self.assertEqual(matrix, expected_mats[period])
+
+    def test_matrix_range_with_diff_start_period(self):
+        mrange = matrixrange(self.trans_mat_group, 3, 5)
+        matrixp3 = self.trans_mat_group.get_matrix(3)
+        matrixp4 = self.trans_mat_group.get_matrix(4)
+        expected_mats = {3: matrixp3, 4: matrixp4}
+        for per_matrix in mrange:
+            period = per_matrix.period
+            matrix = per_matrix.matrix
+            self.assertEqual(matrix, expected_mats[period])
+
+
 
 
 class TransitionMatrixTest(unittest.TestCase):

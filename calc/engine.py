@@ -20,18 +20,19 @@ def calculator(transmatgroup, prob_vec_init, first_period=None, last_period=None
     # 1. First period <= last period
     # 2. transition matrix group and initial probability vector have to have same states.
     # 3. all transition matrices must be valid.
+    # 4. transition matrix group states must be consistent
     if first_period is None:
         first_period = transmatgroup.firstperiod()
     if last_period is None:
         last_period = transmatgroup.lastperiod()
     if first_period > last_period:
         raise ValueError('First period: {0} is > last period: {1}'.format(first_period, last_period))
-    # for matrix_assoc in transmatgroup:
-    #     if matrix_assoc.period > last_period:
-    #         break
-    #     matrix = matrix_assoc.matrix
-    #     validations.is_valid(matrix)
-    #     validations.check_consistent_states(matrix, prob_vec_init)
+    validations.check_consistent_group_states(transmatgroup)
+    for matrix_assoc in matrixrange(transmatgroup, first_period, last_period + 1):
+        matrix = matrix_assoc.matrix
+        if matrix is not None:
+            validations.is_valid(matrix)
+            validations.check_consistent_states(matrix, prob_vec_init)
 
     # now we're okay to do calculation
     probvec = prob_vec_init

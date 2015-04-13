@@ -1,6 +1,6 @@
 from calc.exceptions import InvalidTransitionStateError
-from calc.validations import check_state_valid
-from collections import defaultdict, OrderedDict
+import calc.validations
+from collections import defaultdict
 from util import mathutil
 
 __author__ = 'tangz'
@@ -34,16 +34,21 @@ class ProbabilityVector:
     def __hash__(self):
         return hash(self.vectordict)
 
-# TODO: Unit test matrixrange
-def matrixrange(matrix_group, period_stop):
-    matrix_group.reset_period_marker()
-    for per_matrix in matrix_group:
-        if per_matrix.period >= period_stop:
-            break
-        yield per_matrix
+# def matrixrange(matrix_group):
+#     matrixrange(matrix_group, 1, matrix_group.lastperiod() + 1)
+#
+#
+# def matrixrange(matrix_group, period_stop):
+#     matrix_group.reset_period_marker()
+#     for per_matrix in matrix_group:
+#         if per_matrix.period >= period_stop:
+#             break
+#         yield per_matrix
 
 
-def matrixrange(matrix_group, period_start, period_stop):
+def matrixrange(matrix_group, period_start=1, period_stop=None):
+    if period_stop is None:
+        period_stop = matrix_group.lastperiod() + 1
     matrix_group.set_period_marker(period_start)
     for per_matrix in matrix_group:
         if per_matrix.period >= period_stop:
@@ -95,9 +100,6 @@ class TransitionMatrixGroup:
             raise ValueError('Period must be a positive integer!')
         self.pmarker = period
 
-    # def __bool__(self):
-    # return not self.group
-
     class PeriodMatrixAssociation:
         def __init__(self, period, matrix):
             self.period = period
@@ -146,19 +148,19 @@ class TransitionMatrix:
         return state in self.states
 
     def set_probability(self, current_state, future_state, probability):
-        check_state_valid(self, current_state, future_state)
+        calc.validations.check_state_valid(self, current_state, future_state)
         self.data[current_state][future_state] = probability
 
     def get_probability(self, current_state, future_state):
-        check_state_valid(self, current_state, future_state)
+        calc.validations.check_state_valid(self, current_state, future_state)
         return self.data[current_state][future_state]
 
     def probabilities_from(self, current_state):
-        check_state_valid(self, current_state)
+        calc.validations.check_state_valid(self, current_state)
         return self.data[current_state].copy()
 
     def probabilities_to(self, future_state):
-        check_state_valid(self, future_state)
+        calc.validations.check_state_valid(self, future_state)
         states = self.states
         current_prob_dict = dict()
         for current_state in states:

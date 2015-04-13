@@ -1,19 +1,20 @@
-from functools import reduce
+# from calc import core
+# from calc.core import *
+import calc.core
 from calc.exceptions import *
 from util.mathutil import eq
 
 __author__ = 'tangz'
 
-# TODO: use better syntax, unit test
-def check_consistent_states(transition_mat_group):
-    states = None
-    for period in transition_mat_group.periods():
-        mat = transition_mat_group.get_matrix(period)
-        if mat is not None:
-            if states is None:
-                states = mat.states
-            elif set(states) != set(mat.states):
-                raise InconsistentStatesError("Found inconsistent states in transition matrix group.")
+def check_consistent_group_states(transition_mat_group):
+    states = ()
+    for per_matrix in calc.core.matrixrange(transition_mat_group):
+        if per_matrix.matrix is None:
+            continue
+        if not states:
+            states = per_matrix.matrix.states
+        elif not sorted(per_matrix.matrix.states) == sorted(states):
+            raise InconsistentStatesError('Transition matrix group does not have consisted states!')
 
 
 ### General methods ###
@@ -43,8 +44,9 @@ def check_matrix_probs(transition_mat):
 
 def check_normalized_probs(transition_mat):
     states = transition_mat.states
-    [check_probs_sum_to_one(*transition_mat.probabilities_from(current_state).values()) for current_state in states]
-    [check_probs_sum_to_one(*transition_mat.probabilities_to(future_state).values()) for future_state in states]
+    for state in states:
+        check_probs_sum_to_one(*transition_mat.probabilities_from(state).values())
+        check_probs_sum_to_one(*transition_mat.probabilities_to(state).values())
 
 
 def check_state_valid(transition_mat, *states):
