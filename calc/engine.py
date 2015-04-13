@@ -28,19 +28,19 @@ def calculator(transmatgroup, prob_vec_init, first_period=None, last_period=None
     if first_period > last_period:
         raise ValueError('First period: {0} is > last period: {1}'.format(first_period, last_period))
     validations.check_consistent_group_states(transmatgroup)
-    for matrix_assoc in matrixrange(transmatgroup, first_period, last_period + 1):
-        matrix = matrix_assoc.matrix
-        if matrix is not None:
-            validations.is_valid(matrix)
-            validations.check_consistent_states(matrix, prob_vec_init)
-
-    # now we're okay to do calculation
     probvec = prob_vec_init
-    for periodmatassoc in matrixrange(transmatgroup, first_period, last_period+1):
-        period = periodmatassoc.period
+    for matrix_assoc in matrixrange(transmatgroup, first_period, last_period + 1):
+        # TODO: check if probability vector sums to 1?
+        matrix = matrix_assoc.matrix
+        non_null_matrix = matrix is not None
+        if non_null_matrix:
+            validations.is_valid(matrix)
+            validations.check_consistent_states(matrix, probvec)
+        period = matrix_assoc.period
         yield CalculationResult(period, probvec)
-        matrix = periodmatassoc.matrix
-        probvec = probvec if matrix is None else multiply(matrix, probvec)
+        if non_null_matrix:
+            probvec = multiply(matrix, probvec)
+
 
 
 class CalculationResult:
