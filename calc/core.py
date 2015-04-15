@@ -34,17 +34,6 @@ class ProbabilityVector:
     def __hash__(self):
         return hash(self.vectordict)
 
-# def matrixrange(matrix_group):
-#     matrixrange(matrix_group, 1, matrix_group.lastperiod() + 1)
-#
-#
-# def matrixrange(matrix_group, period_stop):
-#     matrix_group.reset_period_marker()
-#     for per_matrix in matrix_group:
-#         if per_matrix.period >= period_stop:
-#             break
-#         yield per_matrix
-
 
 def matrixrange(matrix_group, period_start=1, period_stop=None):
     if period_stop is None:

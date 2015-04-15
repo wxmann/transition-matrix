@@ -1,4 +1,5 @@
 from calc import validations
+from calc import create
 from calc.core import ProbabilityVector, matrixrange
 
 __author__ = 'tangz'
@@ -23,13 +24,13 @@ def calculator(transmatgroup, prob_vec_init, first_period=None, last_period=None
     # 4. transition matrix group states must be consistent
     if first_period is None:
         first_period = transmatgroup.firstperiod()
-    if last_period is None:
-        last_period = transmatgroup.lastperiod()
-    if first_period > last_period:
+    if last_period is not None and first_period > last_period:
         raise ValueError('First period: {0} is > last period: {1}'.format(first_period, last_period))
     validations.check_consistent_group_states(transmatgroup)
     probvec = prob_vec_init
-    for matrix_assoc in matrixrange(transmatgroup, first_period, last_period + 1):
+    if last_period is not None:
+        last_period += 1
+    for matrix_assoc in matrixrange(transmatgroup, first_period, last_period):
         # TODO: check if probability vector sums to 1?
         matrix = matrix_assoc.matrix
         non_null_matrix = matrix is not None
@@ -41,6 +42,10 @@ def calculator(transmatgroup, prob_vec_init, first_period=None, last_period=None
         if non_null_matrix:
             probvec = multiply(matrix, probvec)
 
+
+def results(transmatgroup, initial_state, states, first_period=None, last_period=None):
+    init_vec = create.probability_exact(initial_state, states)
+    return (result for result in calculator(transmatgroup, init_vec, first_period, last_period))
 
 
 class CalculationResult:

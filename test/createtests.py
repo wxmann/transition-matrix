@@ -30,8 +30,11 @@ class CreateTests(unittest.TestCase):
 
     # TODO: this should not belong here.
     def test_should_create_random_group(self):
-        periods = [1, 4, 5, 7, 9]
-        group = create.random_group(('A', 'B', 'C', 'D', 'F'), periods)
-        initvec = ProbabilityVector(A=0, B=1, C=0, D=0, F=0)
-        for result in engine.calculator(group, initvec, first_period=1, last_period=10):
+        periods = range(1, 15)
+        states = ('A', 'B', 'C', 'D', 'F')
+        group = create.random_group(states, periods)
+        for result in engine.results(group, 'A', states):
             print(result)
+        # initvec = ProbabilityVector(A=0, B=1, C=0, D=0, F=0)
+        # for result in engine.calculator(group, initvec, first_period=1, last_period=10):
+        #     print(result)

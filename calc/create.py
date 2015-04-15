@@ -29,14 +29,13 @@ def _prob_helper(transmat, current_state, future_state, last_state):
     lastprob_from = 1 - sum(probsfrom.values())
     validations.check_valid_probs(lastprob_to, lastprob_from)
 
-    generated_prob = 0
     if current_state is last_state:
         generated_prob = lastprob_to
     elif future_state is last_state:
         generated_prob = lastprob_from
     else:
         upperbound = min(lastprob_from, lastprob_to)
-        lowerbound = max(0.0, upperbound/2 - 0.1)
+        lowerbound = max(0.0, upperbound/1.1 - 0.1)
         generated_prob = uniform(lowerbound, upperbound)
 
     logutil.info('generated probability for current state: {0}, future state: {1}, is: {2}'.format(current_state, future_state, generated_prob))
