@@ -100,9 +100,7 @@ class TransitionMatrixGroupTest(unittest.TestCase):
         matrixp3 = self.trans_mat_group.get_matrix(3)
         matrixp4 = self.trans_mat_group.get_matrix(4)
         expected_mats = {1: matrixp1, 2: matrixp2, 3: matrixp3, 4: matrixp4}
-        for per_matrix in mrange:
-            period = per_matrix.period
-            matrix = per_matrix.matrix
+        for period, matrix in mrange:
             self.assertEqual(matrix, expected_mats[period])
 
     def test_matrix_range_with_diff_start_period(self):
@@ -110,9 +108,7 @@ class TransitionMatrixGroupTest(unittest.TestCase):
         matrixp3 = self.trans_mat_group.get_matrix(3)
         matrixp4 = self.trans_mat_group.get_matrix(4)
         expected_mats = {3: matrixp3, 4: matrixp4}
-        for per_matrix in mrange:
-            period = per_matrix.period
-            matrix = per_matrix.matrix
+        for period, matrix in mrange:
             self.assertEqual(matrix, expected_mats[period])
 
 

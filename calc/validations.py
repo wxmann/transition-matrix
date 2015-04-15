@@ -8,12 +8,12 @@ __author__ = 'tangz'
 
 def check_consistent_group_states(transition_mat_group):
     states = ()
-    for per_matrix in calc.core.matrixrange(transition_mat_group):
-        if per_matrix.matrix is None:
+    for period, matrix in calc.core.matrixrange(transition_mat_group):
+        if matrix is None:
             continue
         if not states:
-            states = per_matrix.matrix.states
-        elif not sorted(per_matrix.matrix.states) == sorted(states):
+            states = matrix.states
+        elif not sorted(matrix.states) == sorted(states):
             raise InconsistentStatesError('Transition matrix group does not have consisted states!')
 
 

@@ -15,9 +15,7 @@ def matrixgroup_to_csv(file, transmatgroup, matrix_id_col=DEFAULT_MATRIX_ID_COL,
     try:
         writer = csv.DictWriter(csvfile, (matrix_id_col, current_state_col, future_state_col, prob_col))
         writer.writeheader()
-        for per_matrix in matrixrange(transmatgroup):
-            period = per_matrix.period
-            matrix = per_matrix.matrix
+        for period, matrix in matrixrange(transmatgroup):
             if matrix is not None:
                 matrixid = 'Matrix_Period_' + str(period)
                 _write_matrix(writer, matrix, matrixid, matrix_id_col, current_state_col, future_state_col, prob_col)

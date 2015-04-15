@@ -42,7 +42,7 @@ def matrixrange(matrix_group, period_start=1, period_stop=None):
     for per_matrix in matrix_group:
         if per_matrix.period >= period_stop:
             break
-        yield per_matrix
+        yield per_matrix.period, per_matrix.matrix
 
 
 class TransitionMatrixGroup:
