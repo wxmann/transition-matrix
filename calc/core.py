@@ -29,7 +29,15 @@ class ProbabilityVector:
     def __eq__(self, other):
         if not isinstance(other, ProbabilityVector):
             return False
-        return self is other or self.vectordict == other.vectordict
+        return self is other or self._num_eq(self.vectordict, other.vectordict)
+
+    def _num_eq(self, vectordict1, vectordict2):
+        if not vectordict1.keys() == vectordict2.keys():
+            return False
+        for key in vectordict1:
+            if not mathutil.eq(vectordict1[key], vectordict2[key]):
+                return False
+        return True
 
     def __hash__(self):
         return hash(self.vectordict)

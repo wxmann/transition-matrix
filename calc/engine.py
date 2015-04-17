@@ -22,27 +22,28 @@ def calculator(transmatgroup, prob_vec_init, first_period=None, last_period=None
     # 2. transition matrix group and initial probability vector have to have same states.
     # 3. all transition matrices must be valid.
     # 4. transition matrix group states must be consistent
+
     if first_period is None:
         first_period = transmatgroup.firstperiod()
-    if last_period is not None and first_period > last_period:
+    elif last_period is not None and first_period > last_period:
         raise ValueError('First period: {0} is > last period: {1}'.format(first_period, last_period))
     validations.check_consistent_group_states(transmatgroup)
 
     probvec = prob_vec_init
-    yield CalculationResult(first_period, probvec)
+    yield first_period, probvec
     for period, matrix in matrixrange(transmatgroup, first_period, last_period):
         # TODO: check if probability vector sums to 1?
         if matrix is not None:
             validations.is_valid(matrix)
             validations.check_consistent_states(matrix, probvec)
             probvec = multiply(matrix, probvec)
-        yield CalculationResult(period + 1, probvec)
+        yield period + 1, probvec
 
 
 
 def results(transmatgroup, initial_state, states, first_period=None, last_period=None):
     init_vec = create.probability_exact(initial_state, states)
-    return (result for result in calculator(transmatgroup, init_vec, first_period, last_period))
+    return {period: vec for period, vec in calculator(transmatgroup, init_vec, first_period, last_period)}
 
 
 class CalculationResult:

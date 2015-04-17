@@ -46,7 +46,6 @@ def check_normalized_probs(transition_mat):
     states = transition_mat.states
     for state in states:
         check_probs_sum_to_one(*transition_mat.probabilities_from(state).values())
-        check_probs_sum_to_one(*transition_mat.probabilities_to(state).values())
 
 
 def check_state_valid(transition_mat, *states):
