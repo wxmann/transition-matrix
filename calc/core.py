@@ -106,8 +106,11 @@ class TransitionMatrixGroup:
 # TODO: str
 class TransitionMatrix:
     def __init__(self, *states):
+        if len(states) <= 1:
+            raise ValueError('Transition matrix must have at least two states')
         self.data = defaultdict(dict)
         self.reset_states(states)
+        self.states = states
 
     def __eq__(self, other):
         if not isinstance(other, TransitionMatrix):
@@ -138,7 +141,7 @@ class TransitionMatrix:
         for s_out in states:
             temp = dict()
             for s_in in states:
-                temp[s_in] = 0
+                temp[s_in] = 0.0
             self.data[s_out] = temp
 
     def state_exists(self, state):
