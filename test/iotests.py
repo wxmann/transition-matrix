@@ -17,5 +17,5 @@ class IOTest(unittest.TestCase):
 
     def test_input(self):
         file = "import_test.csv"
-        matrix = io.matrix_from_csv(file, ('AAA', 'AA', 'A'))
+        matrix = io.matrix_from_csv(file)
         self.assertEqual(matrix, testdata.valid_transition_mat())

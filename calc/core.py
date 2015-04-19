@@ -120,9 +120,18 @@ class TransitionMatrixGroup:
 
 # TODO: str
 class TransitionMatrix:
+
+    @classmethod
+    def from_values(cls, values):
+        # honestly, this is not the best way to do it. But I don't see any other choice.
+        states = tuple(values.keys())
+        matrix = TransitionMatrix(*states)
+        for current_state in states:
+            for future_state in states:
+                matrix.set_probability(current_state, future_state, values[current_state][future_state])
+        return matrix
+
     def __init__(self, *states):
-        if len(states) <= 1:
-            raise ValueError('Transition matrix must have at least two states')
         self.data = defaultdict(dict)
         self.reset_states(states)
 

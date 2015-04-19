@@ -40,6 +40,20 @@ class ProbabilityVectorTest(unittest.TestCase):
     def test_values(self):
         self.assertCountEqual(self.probvector.values(), [1, 2, 3])
 
+    def test_from_values(self):
+        values = defaultdict(dict)
+        states = ('A', 'B')
+        fromconstructor = TransitionMatrix(*states)
+        for current_state in states:
+            for future_state in states:
+                prob = 1 if current_state == future_state else 0
+                values[current_state][future_state] = prob
+                fromconstructor.set_probability(current_state, future_state, prob)
+        fromvalues = TransitionMatrix.from_values(values)
+        self.assertEqual(fromconstructor, fromvalues)
+
+
+
 
 class TransitionMatrixGroupTest(unittest.TestCase):
     def setUp(self):

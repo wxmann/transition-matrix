@@ -45,12 +45,3 @@ def results(transmatgroup, initial_state, first_period=None, last_period=None):
     states = transmatgroup.states()
     init_vec = create.probability_exact(initial_state, states)
     return {period: vec for period, vec in calculator(transmatgroup, init_vec, first_period, last_period)}
-
-
-class CalculationResult:
-    def __init__(self, period, probvector):
-        self.period = period
-        self.probabilities = probvector
-
-    def __str__(self):
-        return 'period: {0} | probabilities: {1}'.format(self.period, self.probabilities)

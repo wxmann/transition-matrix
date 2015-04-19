@@ -24,11 +24,11 @@ def matrixgroup_to_csv(file, transmatgroup, matrix_id_col=DEFAULT_MATRIX_ID_COL,
         csvfile.close()
 
 # TODO: test
-def matrixgroup_from_csv(period_file_map, states, current_state_col=DEFAULT_CURRENT_STATE_HEADER,
+def matrixgroup_from_csv(period_file_map, current_state_col=DEFAULT_CURRENT_STATE_HEADER,
                     future_state_col=DEFAULT_FUTURE_STATE_HEADER, prob_col=DEFAULT_PROBABILITY_HEADER):
     group = TransitionMatrixGroup()
     for period, file in period_file_map.items():
-        matrix = matrix_from_csv(file, states, current_state_col, future_state_col, prob_col)
+        matrix = matrix_from_csv(file, current_state_col, future_state_col, prob_col)
         group.add_matrix(period, matrix)
 
 
@@ -50,20 +50,20 @@ def _write_matrix(dictwriter, matrix, matrixid, matrix_id_col, current_state_col
             dictwriter.writerow(row)
 
 
-def matrix_from_csv(file, states, current_state_col=DEFAULT_CURRENT_STATE_HEADER,
+def matrix_from_csv(file, current_state_col=DEFAULT_CURRENT_STATE_HEADER,
                     future_state_col=DEFAULT_FUTURE_STATE_HEADER, prob_col=DEFAULT_PROBABILITY_HEADER):
     with open(file) as csvfile:
         reader = csv.DictReader(csvfile)
-        return _read_matrix(reader, states, current_state_col, future_state_col, prob_col)
+        return _read_matrix(reader, current_state_col, future_state_col, prob_col)
 
 
-def _read_matrix(dictreader, states, current_state_col, future_state_col, prob_col):
-    matrix = TransitionMatrix(*states)
+def _read_matrix(dictreader, current_state_col, future_state_col, prob_col):
+    matrix_dict = defaultdict(dict)
     for line in dictreader:
         current_state = line[current_state_col]
         future_state = line[future_state_col]
         prob = float(line[prob_col])
-        matrix.set_probability(current_state, future_state, prob)
-    return matrix
+        matrix_dict[current_state][future_state] = prob
+    return TransitionMatrix.from_values(matrix_dict)
 
 

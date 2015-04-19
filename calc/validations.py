@@ -35,6 +35,8 @@ def check_probs_sum_to_one(*probs):
 ### Specific to transition matrix ###
 
 def is_valid(transition_mat):
+    if len(transition_mat.states) <= 1:
+        raise ValueError("Transition matrix must have at least two states!")
     check_matrix_probs(transition_mat)
     check_normalized_probs(transition_mat)
 
