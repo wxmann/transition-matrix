@@ -6,6 +6,7 @@ from util.mathutil import eq
 
 __author__ = 'tangz'
 
+# TODO: we can probably get rid of this, it's built into transmatgroup.states()
 def check_consistent_group_states(transition_mat_group):
     states = ()
     for period, matrix in calc.core.matrixrange(transition_mat_group):
@@ -31,7 +32,7 @@ def check_probs_sum_to_one(*probs):
             "Sum of probabilities: {0} is not equal to 1.0 where it is expected to.".format(probs))
 
 
-### Methods specific to transition matrix ###
+### Specific to transition matrix ###
 
 def is_valid(transition_mat):
     check_matrix_probs(transition_mat)
@@ -60,3 +61,8 @@ def check_consistent_states(transition_mat, prob_vec):
         raise InconsistentStatesError(
             'Inconsistent states between transition matrix: {} and probability vector: {}!'.format(
                 transition_mat.states(), prob_vec.states()))
+
+### Specific to probability vector ###
+
+def is_valid_prob_vector(probvector):
+    check_probs_sum_to_one(*probvector.values())

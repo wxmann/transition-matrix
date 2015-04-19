@@ -1,5 +1,5 @@
 import unittest
-from calc.core import TransitionMatrix, TransitionMatrixGroup
+from calc.core import TransitionMatrix, TransitionMatrixGroup, ProbabilityVector
 from calc import validations
 from calc import exceptions
 from test import testdata
@@ -54,3 +54,13 @@ class ValidationsTest(unittest.TestCase):
         group.add_matrix(2, matrixp2)
         group.add_matrix(4, matrixp4)
         self.assertRaises(exceptions.InconsistentStatesError, validations.check_consistent_group_states, group)
+
+
+    def test_should_catch_nonunit_probvec(self):
+        probvec = ProbabilityVector(AAA=1, AA=2)
+        self.assertRaises(exceptions.UnnormalizedProbabilitiesError, validations.is_valid_prob_vector, probvec)
+
+    def test_should_pass_unit_probvec(self):
+        probvec = ProbabilityVector(AAA=0.9, AA=0.04, A=0.06)
+        validations.is_valid_prob_vector(probvec)
+

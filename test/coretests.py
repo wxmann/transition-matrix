@@ -37,6 +37,9 @@ class ProbabilityVectorTest(unittest.TestCase):
         probvector2 = ProbabilityVector(AAA=2, AA=2, A=3)
         self.assertNotEqual(self.probvector, probvector2)
 
+    def test_values(self):
+        self.assertCountEqual(self.probvector.values(), [1, 2, 3])
+
 
 class TransitionMatrixGroupTest(unittest.TestCase):
     def setUp(self):
@@ -112,6 +115,16 @@ class TransitionMatrixGroupTest(unittest.TestCase):
             self.assertEqual(matrix, expected_mats[period])
 
 
+    def test_should_get_not_states_inconsistent(self):
+        self.assertRaises(exceptions.InconsistentStatesError, self.trans_mat_group.states)
+
+    def test_should_get_states_consistent(self):
+        matp1 = TransitionMatrix('A', 'B', 'C')
+        matp9 = TransitionMatrix('A', 'B', 'C')
+        group = TransitionMatrixGroup()
+        group.add_matrix(1, matp1)
+        group.add_matrix(9, matp9)
+        self.assertCountEqual(group.states(), ('A', 'B', 'C'))
 
 
 class TransitionMatrixTest(unittest.TestCase):

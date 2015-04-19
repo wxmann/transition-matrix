@@ -17,8 +17,6 @@ def random_group(states, periods):
 
 
 def random_matrix(*states):
-    if len(states) <= 1:
-        raise ValueError('Must have at least two states to create random matrix successfully')
     transmat = TransitionMatrix(*states)
     _diagonal_prob_helper(transmat)
     for current_state in states:

@@ -1,4 +1,4 @@
-from calc.exceptions import InvalidTransitionStateError
+from calc.exceptions import InvalidTransitionStateError, InconsistentStatesError
 import calc.validations
 from collections import defaultdict
 from util import mathutil
@@ -22,6 +22,9 @@ class ProbabilityVector:
         if not state in self.states():
             raise InvalidTransitionStateError('Invalid state: ' + state)
         return self.vectordict[state]
+
+    def values(self):
+        return self.vectordict.values()
 
     def __str__(self):
         return str(self.vectordict)
@@ -97,6 +100,18 @@ class TransitionMatrixGroup:
             raise ValueError('Period must be a positive integer!')
         self.pmarker = period
 
+    def states(self):
+        states = ()
+        for period, matrix in matrixrange(self):
+            if matrix is None:
+                continue
+            if not states:
+                states = matrix.states
+            elif not sorted(matrix.states) == sorted(states):
+                raise InconsistentStatesError('Transition matrix group does not have consisted states!')
+        return states
+
+
     class PeriodMatrixAssociation:
         def __init__(self, period, matrix):
             self.period = period
@@ -110,7 +125,6 @@ class TransitionMatrix:
             raise ValueError('Transition matrix must have at least two states')
         self.data = defaultdict(dict)
         self.reset_states(states)
-        self.states = states
 
     def __eq__(self, other):
         if not isinstance(other, TransitionMatrix):
