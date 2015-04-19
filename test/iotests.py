@@ -1,4 +1,5 @@
 import unittest
+from calc.core import ProbabilityVector
 from test import testdata
 from calc import io, create
 
@@ -19,3 +20,10 @@ class IOTest(unittest.TestCase):
         file = "import_test.csv"
         matrix = io.matrix_from_csv(file)
         self.assertEqual(matrix, testdata.valid_transition_mat())
+
+    def test_output_results(self):
+        filename = "results.csv"
+        vecp1 = ProbabilityVector(AAA=0.1, AA=0, A=0.5)
+        vecp2 = ProbabilityVector(AAA=0.2, AA=0.3, A=0.4)
+        results = {1:vecp1, 2:vecp2}
+        io.results_to_file(results, filename)

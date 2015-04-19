@@ -1,5 +1,6 @@
+from collections import defaultdict
 import csv
-from calc.core import *
+from calc import core
 
 __author__ = 'tangz'
 
@@ -9,6 +10,21 @@ DEFAULT_FUTURE_STATE_HEADER = 'END_STATE'
 DEFAULT_PROBABILITY_HEADER = 'PROBABILITY'
 
 
+def results_to_file(results_map, filename):
+    with open(filename, 'w', newline='') as csvfile:
+        writer = None
+        for period, probvec in results_map.items():
+            states = list(probvec.states())
+            states.sort()
+            if writer is None:
+                writer = csv.DictWriter(csvfile, ['PERIOD'] + states)
+                writer.writeheader()
+            row = {'PERIOD': period}
+            row.update(probvec.vectordict)
+            writer.writerow(row)
+
+
+# TODO: add flag to write into separate files
 def matrixgroup_to_csv(file, transmatgroup, matrix_id_col=DEFAULT_MATRIX_ID_COL,
                        current_state_col=DEFAULT_CURRENT_STATE_HEADER,
                        future_state_col=DEFAULT_FUTURE_STATE_HEADER, prob_col=DEFAULT_PROBABILITY_HEADER):
@@ -16,21 +32,21 @@ def matrixgroup_to_csv(file, transmatgroup, matrix_id_col=DEFAULT_MATRIX_ID_COL,
     try:
         writer = csv.DictWriter(csvfile, (matrix_id_col, current_state_col, future_state_col, prob_col))
         writer.writeheader()
-        for period, matrix in matrixrange(transmatgroup):
+        for period, matrix in core.matrixrange(transmatgroup):
             if matrix is not None:
                 matrixid = 'Matrix_Period_' + str(period)
                 _write_matrix(writer, matrix, matrixid, matrix_id_col, current_state_col, future_state_col, prob_col)
     finally:
         csvfile.close()
 
+
 # TODO: test
 def matrixgroup_from_csv(period_file_map, current_state_col=DEFAULT_CURRENT_STATE_HEADER,
-                    future_state_col=DEFAULT_FUTURE_STATE_HEADER, prob_col=DEFAULT_PROBABILITY_HEADER):
-    group = TransitionMatrixGroup()
+                         future_state_col=DEFAULT_FUTURE_STATE_HEADER, prob_col=DEFAULT_PROBABILITY_HEADER):
+    group = core.TransitionMatrixGroup()
     for period, file in period_file_map.items():
         matrix = matrix_from_csv(file, current_state_col, future_state_col, prob_col)
         group.add_matrix(period, matrix)
-
 
 
 def matrix_to_csv(file, matrix, matrixid, matrix_id_col=DEFAULT_MATRIX_ID_COL,
@@ -64,6 +80,6 @@ def _read_matrix(dictreader, current_state_col, future_state_col, prob_col):
         future_state = line[future_state_col]
         prob = float(line[prob_col])
         matrix_dict[current_state][future_state] = prob
-    return TransitionMatrix.from_values(matrix_dict)
+    return core.TransitionMatrix.from_values(matrix_dict)
 
 

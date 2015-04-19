@@ -41,7 +41,8 @@ def calculator(transmatgroup, prob_vec_init, first_period=None, last_period=None
 
 
 
-def results(transmatgroup, initial_state, first_period=None, last_period=None):
-    states = transmatgroup.states()
+def results(transmatgroup, initial_state, states=None, first_period=None, last_period=None):
+    if states is None:
+        states = transmatgroup.states()
     init_vec = create.probability_exact(initial_state, states)
     return {period: vec for period, vec in calculator(transmatgroup, init_vec, first_period, last_period)}
