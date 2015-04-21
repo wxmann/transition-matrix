@@ -34,7 +34,7 @@ def main():
                                help='Output file for calculated forecasted probabilities [default: results.csv]',
                                default='results.csv')
     common_parser.add_argument('-R', '--calc-range',
-                               help='''Period range from two arguments to calculate results, both must be positive integers.
+                               help='''Period range from two arguments (inclusive) to calculate results, both must be positive integers.
                                By default, calculation starts on first period and goes to the period after the last period
                                that transition matrix exists.''',
                                nargs=2, type=int)
@@ -59,7 +59,7 @@ def main():
 
     load_parser = subparsers.add_parser('load', help='Load transition matrices from file', parents=[common_parser])
     load_parser.add_argument('-f', '--matrix-input',
-                             help='Input file for transition matrices. Required. [default: input_matrices.csv]',
+                             help='Input file for transition matrices. Required.',
                              required=True, default='input_matrices.csv')
 
     args = main_parser.parse_args()
