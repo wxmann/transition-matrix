@@ -27,3 +27,18 @@ class IOTest(unittest.TestCase):
         vecp2 = ProbabilityVector(AAA=0.2, AA=0.3, A=0.4)
         results = {1:vecp1, 2:vecp2}
         io.results_to_file(results, filename)
+
+    def test_import_group(self):
+        filename_group = "import_matrix_group_sample.csv"
+        filename_p1 = "import_group_expected_p1.csv"
+        filename_p2 = "import_group_expected_p2.csv"
+        filename_p3 = "import_group_expected_p3.csv"
+        matrixgroup = io.matrixgroup_from_csv(filename_group)
+        matrixp1 = io.matrix_from_csv(filename_p1)
+        matrixp2 = io.matrix_from_csv(filename_p2)
+        matrixp3 = io.matrix_from_csv(filename_p3)
+
+        self.assertEqual(matrixgroup.get_matrix(1), matrixp1)
+        self.assertEqual(matrixgroup.get_matrix(2), matrixp2)
+        self.assertEqual(matrixgroup.get_matrix(3), matrixp3)
+
