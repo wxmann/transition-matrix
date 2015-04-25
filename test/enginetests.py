@@ -47,16 +47,16 @@ class EngineTest(unittest.TestCase):
 
     def test_calculation(self):
         resultsA = engine.results(self.calculationgroup, 'A')
-        self.assertEqual(resultsA[1], ProbabilityVector(A=1.0, B=0.0, C=0.0))
-        self.assertEqual(resultsA[2], ProbabilityVector(A=0.8, B=0.2, C=0.0))
-        self.assertEqual(resultsA[3], ProbabilityVector(A=0.74, B=0.2, C=0.06))
+        # self.assertEqual(resultsA[1], ProbabilityVector(A=1.0, B=0.0, C=0.0))
+        self.assertEqual(resultsA[1], ProbabilityVector(A=0.8, B=0.2, C=0.0))
+        self.assertEqual(resultsA[2], ProbabilityVector(A=0.74, B=0.2, C=0.06))
 
         resultsB = engine.results(self.calculationgroup, 'B')
-        self.assertEqual(resultsB[1], ProbabilityVector(A=0.0, B=1.0, C=0.0))
-        self.assertEqual(resultsB[2], ProbabilityVector(A=0.25, B=0.6, C=0.15))
-        self.assertEqual(resultsB[3], ProbabilityVector(A=0.285, B=0.5075, C=0.2075))
+        # self.assertEqual(resultsB[1], ProbabilityVector(A=0.0, B=1.0, C=0.0))
+        self.assertEqual(resultsB[1], ProbabilityVector(A=0.25, B=0.6, C=0.15))
+        self.assertEqual(resultsB[2], ProbabilityVector(A=0.285, B=0.5075, C=0.2075))
 
         resultsC = engine.results(self.calculationgroup, 'C')
-        self.assertEqual(resultsC[1], ProbabilityVector(A=0.0, B=0.0, C=1.0))
-        self.assertEqual(resultsC[2], ProbabilityVector(A=0.05, B=0.25, C=0.7))
-        self.assertEqual(resultsC[3], ProbabilityVector(A=0.07, B=0.2725, C=0.6575))
+        # self.assertEqual(resultsC[1], ProbabilityVector(A=0.0, B=0.0, C=1.0))
+        self.assertEqual(resultsC[1], ProbabilityVector(A=0.05, B=0.25, C=0.7))
+        self.assertEqual(resultsC[2], ProbabilityVector(A=0.07, B=0.2725, C=0.6575))

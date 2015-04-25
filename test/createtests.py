@@ -35,4 +35,4 @@ class CreateTests(unittest.TestCase):
         periods = range(1, terminate_period)
         group = create.random_group(('A', 'B', 'C', 'D', 'F'), periods)
         results = engine.results(group, 'B')
-        io.results_to_file(results)
+        io.results_to_file(results, 'test_calc_random_group.csv')
