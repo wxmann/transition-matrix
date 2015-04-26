@@ -1,4 +1,6 @@
 import argparse
+import datetime
+import logging
 import driver
 
 __author__ = 'tangz'
@@ -26,6 +28,10 @@ def run_load(args):
 
 
 def main():
+    timestr = datetime.datetime.now().strftime("%y%m%d%H%M%S")
+    timestampedfile = 'TransitionMatrix-{0}.log'.format(timestr)
+    logging.basicConfig(filename=timestampedfile, level=logging.INFO)
+
     common_parser = argparse.ArgumentParser(add_help=False)
     common_parser.add_argument('-i', '--initial-state',
                                help='Initial transition state. Required. Must be one of the states provided in -s arguments.',
@@ -35,7 +41,7 @@ def main():
                                default='results.csv')
     common_parser.add_argument('-R', '--calc-range',
                                help='''Period range from two arguments (inclusive) to calculate results, both must be positive integers.
-                               By default, calculation starts on first period and goes to the period after the last period
+                               By default, calculation starts on first period and goes to the last period
                                that transition matrix exists.''',
                                nargs=2, type=int)
 

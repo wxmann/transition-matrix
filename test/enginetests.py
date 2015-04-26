@@ -1,5 +1,5 @@
 import unittest
-from calc import engine, create
+from calc import engine, create, io
 from calc.core import ProbabilityVector, TransitionMatrixGroup, TransitionMatrix
 from test import testdata
 
@@ -60,3 +60,9 @@ class EngineTest(unittest.TestCase):
         # self.assertEqual(resultsC[1], ProbabilityVector(A=0.0, B=0.0, C=1.0))
         self.assertEqual(resultsC[1], ProbabilityVector(A=0.05, B=0.25, C=0.7))
         self.assertEqual(resultsC[2], ProbabilityVector(A=0.07, B=0.2725, C=0.6575))
+
+    def test_calculation_larger(self):
+        calcgroup_large = io.matrixgroup_from_csv('large_matrix_calc.csv')
+        resultsAAA = engine.results(calcgroup_large, 'AAA')
+        resultsBBB = engine.results(calcgroup_large, 'BBB')
+        resultsCCC = engine.results(calcgroup_large, 'CCC')

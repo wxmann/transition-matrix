@@ -1,7 +1,7 @@
 from calc import validations
 from calc.core import TransitionMatrix, TransitionMatrixGroup, ProbabilityVector
 import random
-from util import logutil
+import logging
 
 __author__ = 'tangz'
 
@@ -43,7 +43,7 @@ def _diagonal_prob_helper(transmat, lowerbound=_DIFFERENTIATOR):
     upperbound = 1.0
     for state in transmat.states:
         prob = random.uniform(lowerbound, upperbound)
-        logutil.info(
+        logging.info(
             'generated probability for current state: {0}, future state: {1}, is: {2}'.format(state, state, prob))
         validations.check_valid_probs(prob)
         transmat.set_probability(state, state, prob)
@@ -56,7 +56,7 @@ def _nondiagonal_prob_helper(transmat, current_state, future_states):
         sum1m = 1 - sum(probsfrom.values())
         generated_prob = sum1m if future_state is last_state else random.uniform(0.0, sum1m)
         validations.check_valid_probs(generated_prob)
-        logutil.info('generated probability for current state: {0}, future state: {1}, is: {2}'.format(current_state,
+        logging.info('generated probability for current state: {0}, future state: {1}, is: {2}'.format(current_state,
                                                                                                        future_state,
                                                                                                        generated_prob))
         transmat.set_probability(current_state, future_state, generated_prob)

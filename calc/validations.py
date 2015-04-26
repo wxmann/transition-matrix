@@ -1,5 +1,3 @@
-# from calc import core
-# from calc.core import *
 import calc.core
 from calc.exceptions import *
 from util.mathutil import eq
