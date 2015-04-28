@@ -57,9 +57,6 @@ class TransitionMatrixGroup:
     def __init__(self):
         self.group = {}
 
-    def __iter__(self):
-        return self
-
     def add_matrix(self, period, transition_mat):
         self.group[period] = transition_mat
 
