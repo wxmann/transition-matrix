@@ -1,5 +1,6 @@
 from collections import defaultdict
 import csv
+import sys
 from calc import core
 
 __author__ = 'tangz'
@@ -11,8 +12,15 @@ DEFAULT_PROBABILITY_HEADER = 'PROBABILITY'
 DEFAULT_PERIOD_ID_COL = 'PERIOD'
 
 
+def _open_writer_version_dep(file):
+    if (sys.version_info > (3, 0)):
+        return open(file, 'w', newline='')
+    else:
+        return open(file, 'rb')
+
+
 def results_to_file(results_map, filename):
-    with open(filename, 'w', newline='') as csvfile:
+    with _open_writer_version_dep(filename) as csvfile:
         writer = None
         for period, probvec in results_map.items():
             states = list(probvec.states())
@@ -29,7 +37,7 @@ def results_to_file(results_map, filename):
 def matrixgroup_to_csv(file, transmatgroup, matrix_id_col=DEFAULT_MATRIX_ID_COL,
                        current_state_col=DEFAULT_CURRENT_STATE_HEADER,
                        future_state_col=DEFAULT_FUTURE_STATE_HEADER, prob_col=DEFAULT_PROBABILITY_HEADER):
-    csvfile = open(file, 'w', newline='')
+    csvfile = _open_writer_version_dep(file)
     try:
         writer = csv.DictWriter(csvfile, (matrix_id_col, current_state_col, future_state_col, prob_col))
         writer.writeheader()
@@ -76,7 +84,7 @@ def matrixgroup_from_csv(file, period_id_col=DEFAULT_PERIOD_ID_COL, current_stat
 def matrix_to_csv(file, matrix, matrixid, matrix_id_col=DEFAULT_MATRIX_ID_COL,
                   current_state_col=DEFAULT_CURRENT_STATE_HEADER,
                   future_state_col=DEFAULT_FUTURE_STATE_HEADER, prob_col=DEFAULT_PROBABILITY_HEADER):
-    with open(file, 'w', newline='') as csvfile:
+    with _open_writer_version_dep(file) as csvfile:
         writer = csv.DictWriter(csvfile, (matrix_id_col, current_state_col, future_state_col, prob_col))
         writer.writeheader()
         _write_matrix(writer, matrix, matrixid, matrix_id_col, current_state_col, future_state_col, prob_col)
