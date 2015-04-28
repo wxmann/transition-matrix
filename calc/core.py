@@ -49,30 +49,16 @@ class ProbabilityVector:
 def matrixrange(matrix_group, period_start=1, period_stop=None):
     if period_stop is None:
         period_stop = matrix_group.lastperiod() + 1
-    matrix_group.set_period_marker(period_start)
-    for per_matrix in matrix_group:
-        if per_matrix.period >= period_stop:
-            break
-        yield per_matrix.period, per_matrix.matrix
+    for period in range(period_start, period_stop):
+        yield period, matrix_group.get_matrix(period)
 
 
 class TransitionMatrixGroup:
     def __init__(self):
         self.group = {}
-        self.reset_period_marker()
 
     def __iter__(self):
         return self
-
-    def _pmarker_incrementer(self):
-        if not self.group:
-            self.reset_period_marker()
-        self.pmarker += 1
-
-    def __next__(self):
-        nextval = self.PeriodMatrixAssociation(self.pmarker, self.get_matrix(self.pmarker))
-        self._pmarker_incrementer()
-        return nextval
 
     def add_matrix(self, period, transition_mat):
         self.group[period] = transition_mat
@@ -92,14 +78,6 @@ class TransitionMatrixGroup:
     def lastperiod(self):
         return self.periods()[-1]
 
-    def reset_period_marker(self):
-        self.set_period_marker(1)
-
-    def set_period_marker(self, period):
-        if period <= 0:
-            raise ValueError('Period must be a positive integer!')
-        self.pmarker = period
-
     def states(self):
         states = ()
         for period, matrix in matrixrange(self):
@@ -110,12 +88,6 @@ class TransitionMatrixGroup:
             elif not sorted(matrix.states) == sorted(states):
                 raise InconsistentStatesError('Transition matrix group does not have consisted states!')
         return states
-
-
-    class PeriodMatrixAssociation:
-        def __init__(self, period, matrix):
-            self.period = period
-            self.matrix = matrix
 
 
 # TODO: str

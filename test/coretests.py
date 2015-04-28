@@ -63,9 +63,6 @@ class TransitionMatrixGroupTest(unittest.TestCase):
         self.trans_mat_group.add_matrix(1, self.sample_trans_mat1)
         self.trans_mat_group.add_matrix(3, self.sample_trans_mat2)
 
-    def tearDown(self):
-        self.trans_mat_group.reset_period_marker()
-
     def test_should_have_matrix(self):
         self.assertTrue(self.trans_mat_group.has_matrix(1))
         self.assertTrue(self.trans_mat_group.has_matrix(3))
@@ -84,25 +81,6 @@ class TransitionMatrixGroupTest(unittest.TestCase):
     def test_should_return_periods(self):
         # has to be ordered
         self.assertEqual(self.trans_mat_group.periods(), [1, 3])
-
-    def test_should_iterate(self):
-        p1 = next(self.trans_mat_group)
-        p2 = next(self.trans_mat_group)
-        p3 = next(self.trans_mat_group)
-        p4 = next(self.trans_mat_group)
-        expectedp1mat = self.sample_trans_mat1
-        expectedp2mat = None
-        expectedp3mat = self.sample_trans_mat2
-        expectedp4mat = None
-
-        self.assertEqual(p1.period, 1)
-        self.assertEqual(p1.matrix, expectedp1mat)
-        self.assertEqual(p2.period, 2)
-        self.assertEqual(p2.matrix, expectedp2mat)
-        self.assertEqual(p3.period, 3)
-        self.assertEqual(p3.matrix, expectedp3mat)
-        self.assertEqual(p4.period, 4)
-        self.assertEqual(p4.matrix, expectedp4mat)
 
     def test_should_return_first_period(self):
         self.assertEqual(self.trans_mat_group.firstperiod(), 1)

@@ -3,7 +3,7 @@ from calc import create
 from calc import validations
 from calc import engine
 from calc import io
-from calc.core import ProbabilityVector
+from calc.core import ProbabilityVector, matrixrange
 
 __author__ = 'tangz'
 
@@ -24,10 +24,10 @@ class CreateTests(unittest.TestCase):
         terminate_period = 10
         periods = range(1, terminate_period)
         group = create.random_group(('A', 'B', 'C', 'F'), periods)
-        for matrix_assoc in group:
-            if matrix_assoc.period >= terminate_period:
+        for period, matrix in matrixrange(group):
+            if period >= terminate_period:
                 break
-            validations.is_valid(matrix_assoc.matrix)
+            validations.is_valid(matrix)
 
     # TODO: move into integration test
     def test_should_calculate_random_group(self):
