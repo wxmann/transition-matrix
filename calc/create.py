@@ -3,9 +3,9 @@ from calc.core import TransitionMatrix, TransitionMatrixGroup, ProbabilityVector
 import random
 import logging
 
-__author__ = 'tangz'
+PRECISION = 4
 
-_DIFFERENTIATOR = 0.7
+__author__ = 'tangz'
 
 
 def random_group(states, periods):
@@ -39,14 +39,15 @@ def _future_states_helper(all_states, current_state):
     return future_states_in_order
 
 
-def _diagonal_prob_helper(transmat, lowerbound=_DIFFERENTIATOR):
+def _diagonal_prob_helper(transmat, lowerbound=0.7):
     upperbound = 1.0
     for state in transmat.states:
         prob = random.uniform(lowerbound, upperbound)
+        prob_rounded = round(prob, PRECISION)
         logging.info(
-            'generated probability for current state: {0}, future state: {1}, is: {2}'.format(state, state, prob))
-        validations.check_valid_probs(prob)
-        transmat.set_probability(state, state, prob)
+            'generated probability for current state: {0}, future state: {1}, is: {2}'.format(state, state, prob_rounded))
+        validations.check_valid_probs(prob_rounded)
+        transmat.set_probability(state, state, prob_rounded)
 
 
 def _nondiagonal_prob_helper(transmat, current_state, future_states):
@@ -55,11 +56,12 @@ def _nondiagonal_prob_helper(transmat, current_state, future_states):
         probsfrom = transmat.probabilities_from(current_state)
         sum1m = 1 - sum(probsfrom.values())
         generated_prob = sum1m if future_state is last_state else random.uniform(0.0, sum1m)
-        validations.check_valid_probs(generated_prob)
+        prob_rounded = round(generated_prob, PRECISION)
+        validations.check_valid_probs(prob_rounded)
         logging.info('generated probability for current state: {0}, future state: {1}, is: {2}'.format(current_state,
                                                                                                        future_state,
-                                                                                                       generated_prob))
-        transmat.set_probability(current_state, future_state, generated_prob)
+                                                                                                       prob_rounded))
+        transmat.set_probability(current_state, future_state, prob_rounded)
 
 
 def probability_exact(exact_state, possible_states):
