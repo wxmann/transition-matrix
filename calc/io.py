@@ -16,7 +16,7 @@ def _open_writer_version_dep(file):
     if (sys.version_info > (3, 0)):
         return open(file, 'w', newline='')
     else:
-        return open(file, 'rb')
+        return open(file, 'wb')
 
 
 def results_to_file(results_map, filename):
